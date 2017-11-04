@@ -18,12 +18,12 @@ public interface ProduceListener<T> {
 	/**
 	 * default lowest line
 	 */
-	public final static int DEFAULT_LOWEST = 10;
+	public final static int DEFAULT_LOWEST = 100;
 	
 	/**
 	 * default batch number
 	 */
-	public final static int DEFAULT_BATCH_NUMBER = 5;
+	public final static int DEFAULT_BATCH_NUMBER = 40;
 	
 	void lisnten(GroupBuyingResource<T> bufferResource);
 }

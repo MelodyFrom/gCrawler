@@ -77,7 +77,6 @@ public class GroupBuyingParse<T> implements Parser<GroupBuyingEntity>{
 //		String anhaoStr = anhao.get(0).childNode(0).toString();
 //		String[] anhaoStrs = anhaoStr.split(" ");
 //		entity.setSecretSignal(anhaoStrs[1]);
-		System.out.println(entity);
 		return entity;
 		//店铺信息
 //		Element shopInfo = elements.get(1);

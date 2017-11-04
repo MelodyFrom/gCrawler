@@ -20,7 +20,6 @@ import com.gaop.gCrawler.core.factory.GroupBuyingResource;
 import com.gaop.gCrawler.core.impl.DefaultGrabConfig;
 import com.gaop.gCrawler.core.listener.impl.DeafaultConsumerListener;
 import com.gaop.gCrawler.core.listener.impl.DefaultProducerListener;
-import com.gaop.gCrawler.util.StopWatch;
 
 /**
  * @description 	
@@ -61,7 +60,6 @@ public class Crawler {
 			{
 				throw new IOException("Your rootUrl is blank, please set your rootUrl first.");
 			}
-			StopWatch watch = new StopWatch();
 			Document rootDoc = Jsoup.connect(rootUrl).get();
 			//find the list linked page from root page
 			Elements elements = rootDoc.getElementsByClass("inner");
@@ -74,14 +72,13 @@ public class Crawler {
 				urls.add(hrefUrl);
 			}
 			//fetch these pages via Producer-Consumer-Model
-			GroupBuyingResource<GroupBuyingEntity> resource = new GroupBuyingResource<>(GroupBuyingResource.DEFAULT_SIZE, urls);
+			GroupBuyingResource<GroupBuyingEntity> resource = new GroupBuyingResource<>(GroupBuyingResource.DEFAULT_SIZE, urls, 10);
 			//create a producer listener
 			DefaultProducerListener listener = new DefaultProducerListener();
 			listener.lisnten(resource);
 			//create a consumer listener
 			DeafaultConsumerListener consumer = new DeafaultConsumerListener();
 			consumer.consumer(resource);
-			logger.info("爬取页面耗时:{}秒,爬取页面数量:{}", watch.elapsedTime(), resource.getList().size());
 			return resource.getList();
 		} catch (IOException ex) {
 			logger.error("爬取目标页面IO异常", ex);

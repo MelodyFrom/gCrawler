@@ -18,6 +18,8 @@ public class Consumer<T> implements Runnable{
 		this.resource = resource;
 	}
 	
+	public Consumer(){}
+	
 	public Consumer(GroupBuyingResource<T> resource) {
 		this.resource = resource;
 	}

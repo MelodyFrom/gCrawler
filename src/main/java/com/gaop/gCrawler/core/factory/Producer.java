@@ -5,6 +5,7 @@ package com.gaop.gCrawler.core.factory;
  * 	生产者对象
  * @author gaop
  * @date 2017年10月23日 下午5:08:46
+ * @param <T>
  */
 public class Producer<T> implements Runnable{
 

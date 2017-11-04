@@ -19,7 +19,7 @@ public class demoMain {
 		List<Document> docs = craler.fetch();
 //		Thread.sleep(10000);
 //		System.out.println("开始解析...");
-//		Parser<GroupBuyingEntity> parser = new GroupBuyingParse<GroupBuyingEntity>();
+		Parser<GroupBuyingEntity> parser = new GroupBuyingParse<GroupBuyingEntity>();
 //		List<GroupBuyingEntity> entitys = new ArrayList<>();
 //		for(Document document : docs)
 //		{

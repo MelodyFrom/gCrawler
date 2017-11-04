@@ -11,6 +11,13 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @description 	
+ * 	团购生产-消费者模型;默认消费下限1,生产下线10
+ * @author gaop
+ * @date 2017年11月2日 下午9:17:07
+ * @param <T>
+ */
 public class GroupBuyingResource<T> implements BufferResource<T>{
 
 	private Logger logger = LoggerFactory.getLogger(GroupBuyingResource.class);
@@ -21,9 +28,55 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 	public static final int DEFAULT_SIZE = 100;
 	
 	/**
+	 * default lowest line
+	 */
+	public final static int DEFAULT_LOWEST = 10;
+	
+	/**
+	 * default start line
+	 */
+	
+	public final static int CONSUMER_LINE = 1;
+	
+	/**
 	 * initial size
 	 */
 	private int bufferSize;
+	
+	/**
+	 * 消费数量统计
+	 */
+	private int consumerCount;
+	
+	/**
+	 * 生产数量统计
+	 */
+	private int produceCount;
+	
+	/**
+	 * 消费起点线
+	 */
+	private int consumerLine;
+	
+	/**
+	 * 生产起点线
+	 */
+	private int lowestLine;
+	
+	/**
+	 * 消费总目标数量
+	 */
+	private int targetNumber;
+	
+	/**
+	 * 生产批量
+	 */
+	private int produceBatch = 10;
+	
+	/**
+	 * 消费批量
+	 */
+	private int consumerBatch = 10;
 	
 	private List<String> urls = new ArrayList<>();
 	
@@ -39,15 +92,47 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 	
 	public GroupBuyingResource() {
 		this.bufferSize = DEFAULT_SIZE;
+		this.consumerLine = CONSUMER_LINE;
+		this.lowestLine = DEFAULT_LOWEST;
 	}
 	
+	/**
+	 * @param size 资源池容量
+	 */
 	public GroupBuyingResource(int size) {
 		this.bufferSize = size;
 	}
 	
-	public GroupBuyingResource(int size, List<String> urls) {
+	/**
+	 * @description 
+	 * 	默认生产下限 10; 消费起点线 1
+	 * @param size 资源池容量
+	 * @param urls 爬取目标url
+	 */
+	public GroupBuyingResource(int size, List<String> urls, int batch) {
 		this(size);
 		this.setUrls(urls);//set target urls
+		this.targetNumber = urls.size();
+		this.lowestLine = DEFAULT_LOWEST;
+		this.consumerLine = CONSUMER_LINE;
+		this.produceBatch = batch;
+		this.consumerBatch = batch;
+	}
+	
+	/**
+	 * @param size 资源池容量
+	 * @param urls 爬取目标url列表
+	 * @param lowest 生产下限
+	 * @param consumerLine 消费起点线
+	 */
+	public GroupBuyingResource(int size, List<String> urls, int lowest, int consumerLine, int batch) {
+		this(size);
+		this.setUrls(urls);//set target urls
+		this.targetNumber = urls.size();
+		this.lowestLine = lowest;
+		this.consumerLine = consumerLine;
+		this.produceBatch = batch;
+		this.consumerBatch = batch;
 	}
 
 	public void produce() {
@@ -62,14 +147,28 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 					logger.error("生产方法异常", ex);
 				}
 			}
+			if(targetNumber == produceCount)
+			{
+				//生产目标已完成
+				logger.info("完成生产任务...");
+				return;
+			}
 			//条件满足
 			try {
 				if(CollectionUtils.isEmpty(urls))
 				{
 					return;
 				}
-				list.add(Jsoup.connect(urls.remove(0)).get());
-				list.notifyAll();
+				//判断资源池生产起点下限
+				if(list.size() < lowestLine)
+				{
+					for(int batch = 0; batch < this.produceBatch; batch++) {
+						list.add(Jsoup.connect(urls.remove(0)).get());
+						++produceCount;
+					}
+					logger.info("生产者监听=>当前资源池容量{}, 生产总量{}", list.size(), produceCount);
+					list.notifyAll();
+				}
 			} catch (IOException ex) {
 				logger.error("爬取页面信息异常", ex);
 			}
@@ -79,22 +178,26 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 	public void comsumer() {
 		synchronized (list) 
 		{
-			if(list.size() <= 0)
-			{
-				logger.info("当前资源池为空,延缓执行消费任务...");
-			}
 			try {
-				list.wait();
+				if(list.size() <= 0)
+				{
+					logger.info("当前资源池为空,延缓执行消费任务...");
+					list.wait();
+				}
 			} catch (InterruptedException ex) {
 				logger.error("消费方法异常", ex);
 			}
 			//条件满足
-			if(CollectionUtils.isEmpty(list))
+			//判断资源池消费下限
+			if(list.size() >= consumerLine)
 			{
-				return;
+				for(int batch = 0; batch < this.consumerBatch; batch++)
+				{
+					list.poll();
+					consumerCount++;
+				}
 			}
-			logger.info("消费对象：", list.poll().toString());
-//			GroupBuyingEntity entity = list.remove(0);
+			logger.info("消费对象：,消费数量统计{},当前资源池容量{}", consumerCount, list.size());
 		}
 	}
 	
