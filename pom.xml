@@ -7,7 +7,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>com.gaop.gCrawler</name>
+  <name>gCrawler</name>
   <url>http://maven.apache.org</url>
 
   <properties>

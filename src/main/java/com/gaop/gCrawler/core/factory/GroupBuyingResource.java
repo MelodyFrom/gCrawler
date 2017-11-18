@@ -23,22 +23,6 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 	private Logger logger = LoggerFactory.getLogger(GroupBuyingResource.class);
 	
 	/**
-	 * default buffer capacity
-	 */
-	public static final int DEFAULT_SIZE = 100;
-	
-	/**
-	 * default lowest line
-	 */
-	public final static int DEFAULT_LOWEST = 10;
-	
-	/**
-	 * default start line
-	 */
-	
-	public final static int CONSUMER_LINE = 1;
-	
-	/**
 	 * initial size
 	 */
 	private int bufferSize;

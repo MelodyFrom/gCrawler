@@ -15,6 +15,17 @@ public interface BufferResource<T> {
 	public static final int DEFAULT_SIZE = 100;
 	
 	/**
+	 * default lowest line
+	 */
+	public final static int DEFAULT_LOWEST = 10;
+	
+	/**
+	 * default start line
+	 */
+	
+	public final static int CONSUMER_LINE = 1;
+	
+	/**
 	 * 生产方法
 	 */
 	public void produce();
