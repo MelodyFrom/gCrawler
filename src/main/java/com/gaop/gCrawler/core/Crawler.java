@@ -2,11 +2,14 @@ package com.gaop.gCrawler.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,6 +56,15 @@ public class Crawler {
 		this.grabConfig = config;
 	}
 	
+	public String getRootUrl() {
+		return rootUrl;
+	}
+
+
+	public void setRootUrl(String rootUrl) {
+		this.rootUrl = rootUrl;
+	}
+	
 	public List<Document> fetch() {
 		List<Document> documents = new Vector<>();
 		try {
@@ -61,15 +73,24 @@ public class Crawler {
 				throw new IOException("Your rootUrl is blank, please set your rootUrl first.");
 			}
 			Document rootDoc = Jsoup.connect(rootUrl).get();
-			//find the list linked page from root page
-			Elements elements = rootDoc.getElementsByClass("inner");
+			//get page info
+			Set<String> pageUrls = this.pageUtils(rootDoc);
 			List<String> urls = new ArrayList<>();
-			for(Element element : elements) 
+			if(CollectionUtils.isNotEmpty(pageUrls))
 			{
-				Elements linkElements = element.getElementsByTag("a");
-				Elements href = linkElements.get(1).getElementsByAttribute("href");
-				String hrefUrl = href.get(0).attr("href");
-				urls.add(hrefUrl);
+				for(String pageUrl : pageUrls)
+				{
+					Document pageDoc = Jsoup.connect(pageUrl).get();
+					//find the list linked page from root page
+					Elements elements = pageDoc.getElementsByClass("inner");
+					for(Element element : elements) 
+					{
+						Elements linkElements = element.getElementsByTag("a");
+						Elements href = linkElements.get(1).getElementsByAttribute("href");
+						String hrefUrl = href.get(0).attr("href");
+						urls.add(hrefUrl);
+					}				
+				}
 			}
 			//fetch these pages via Producer-Consumer-Model
 			GroupBuyingResource<GroupBuyingEntity> resource = new GroupBuyingResource<>(GroupBuyingResource.DEFAULT_SIZE, urls, 10);
@@ -88,14 +109,21 @@ public class Crawler {
 		}
 		return documents;
 	}
-
-	public String getRootUrl() {
-		return rootUrl;
-	}
-
-
-	public void setRootUrl(String rootUrl) {
-		this.rootUrl = rootUrl;
+	
+	
+	/**
+	 * 解析根页面分页信息
+	 * @param rootUrl
+	 */
+	private Set<String> pageUtils(Document rootDoc) {
+		Set<String> pageUrl = new HashSet<>();
+		Elements aTagElements = rootDoc.getElementsByClass("pages-list").get(0).getElementsByTag("a");
+		for(Element element : aTagElements) 
+		{
+			element.text();
+			pageUrl.add(element.attr("href"));
+		}
+		return pageUrl;
 	}
 	
 }
