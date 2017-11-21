@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,8 +46,6 @@ public class Crawler {
 		//each default construct method has a default configuration
 		this.grabConfig = new DefaultGrabConfig();
 	}
-	
-	static ExecutorService service = Executors.newFixedThreadPool(GrabConfig.DEFAULT_THREAD_NUMBER);
 	
 	public Crawler(GrabConfig config) {
 		//get a instance by your own configuration
