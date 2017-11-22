@@ -11,6 +11,9 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gaop.gCrawler.core.entity.GroupBuyingEntity;
+import com.gaop.gCrawler.core.impl.GroupBuyingParse;
+
 /**
  * @description 	
  * 	团购生产-消费者模型;默认消费下限1,生产下线10
@@ -92,6 +95,7 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 	 * 	默认生产下限 10; 消费起点线 1
 	 * @param size 资源池容量
 	 * @param urls 爬取目标url
+	 * @param batch 批量爬取值
 	 */
 	public GroupBuyingResource(int size, List<String> urls, int batch) {
 		this(size);
@@ -160,6 +164,8 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 	}
 
 	public void comsumer() {
+		//页面信息解析器对象
+		GroupBuyingParse<GroupBuyingEntity> groupBuyingParser = new GroupBuyingParse<>();
 		synchronized (list) 
 		{
 			try {
@@ -177,7 +183,8 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 			{
 				for(int batch = 0; batch < this.consumerBatch; batch++)
 				{
-					list.poll();
+					//TODO 对封装完成的数据对象的操作
+					groupBuyingParser.parse(list.poll());
 					consumerCount++;
 				}
 			}

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -61,8 +60,11 @@ public class Crawler {
 		this.rootUrl = rootUrl;
 	}
 	
-	public List<Document> fetch() {
-		List<Document> documents = new Vector<>();
+	/**
+	 * 爬取方法
+	 * @throws IOException 
+	 */
+	public void fetch() throws IOException {
 		try {
 			if(StringUtils.isBlank(rootUrl))
 			{
@@ -96,14 +98,16 @@ public class Crawler {
 			//create a consumer listener
 			DeafaultConsumerListener consumer = new DeafaultConsumerListener();
 			consumer.consumer(resource);
-			return resource.getList();
 		} catch (IOException ex) {
-			logger.error("爬取目标页面IO异常", ex);
-			return documents;
+			String errorMsg = "爬取目标页面IO异常";
+			logger.error(errorMsg, ex);
+			throw new RuntimeException(errorMsg);
 		} catch (Exception ex) {
-			logger.error("爬取页面异常", ex);
+			String errorMsg = "爬取页面异常";
+			logger.error(errorMsg, ex);
+			throw new RuntimeException(errorMsg);
+			
 		}
-		return documents;
 	}
 	
 	
