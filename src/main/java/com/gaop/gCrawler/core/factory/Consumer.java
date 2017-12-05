@@ -1,5 +1,7 @@
 package com.gaop.gCrawler.core.factory;
 
+import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
+
 /**
  * @description 	
  * 	消费者对象

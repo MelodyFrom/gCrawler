@@ -1,6 +1,6 @@
 package com.gaop.gCrawler.core.listener;
 
-import com.gaop.gCrawler.core.factory.GroupBuyingResource;
+import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
 
 /**
  * @description 	

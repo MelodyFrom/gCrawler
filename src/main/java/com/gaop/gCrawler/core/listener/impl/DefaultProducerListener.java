@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.gaop.gCrawler.core.GrabConfig;
 import com.gaop.gCrawler.core.entity.GroupBuyingEntity;
-import com.gaop.gCrawler.core.factory.GroupBuyingResource;
 import com.gaop.gCrawler.core.factory.Producer;
+import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
 import com.gaop.gCrawler.core.listener.ProduceListener;
 
 /**

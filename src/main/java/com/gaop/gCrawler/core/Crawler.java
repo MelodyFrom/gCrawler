@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gaop.gCrawler.core.entity.GroupBuyingEntity;
-import com.gaop.gCrawler.core.factory.GroupBuyingResource;
+import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
 import com.gaop.gCrawler.core.impl.DefaultGrabConfig;
 import com.gaop.gCrawler.core.listener.impl.DeafaultConsumerListener;
 import com.gaop.gCrawler.core.listener.impl.DefaultProducerListener;
