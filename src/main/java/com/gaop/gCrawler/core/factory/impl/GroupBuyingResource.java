@@ -124,6 +124,10 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 		this.consumerBatch = batch;
 	}
 
+	/**
+	 * 资源生产方法,供生产者对象调用
+	 * @see com.gaop.gCrawler.core.factory.Producer
+	 */
 	public void produce() {
 		synchronized (list) 
 		{
@@ -164,6 +168,10 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 		}
 	}
 
+	/**
+	 * 资源消费方法,供消费者对象调用
+	 * @see com.gaop.gCrawler.core.factory.Consumer
+	 */
 	public void comsumer() {
 		//页面信息解析器对象
 		GroupBuyingParse<GroupBuyingEntity> groupBuyingParser = new GroupBuyingParse<>();
@@ -182,10 +190,12 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 			//判断资源池消费下限
 			if(list.size() >= consumerLine)
 			{
+				GroupBuyingEntity groupBuyingEntity = null;
 				for(int batch = 0; batch < this.consumerBatch; batch++)
 				{
 					//TODO 对封装完成的数据对象的操作
-					groupBuyingParser.parse(list.poll());
+					groupBuyingEntity = groupBuyingParser.parse(list.poll());
+					System.out.println(groupBuyingEntity);
 					consumerCount++;
 				}
 			}
