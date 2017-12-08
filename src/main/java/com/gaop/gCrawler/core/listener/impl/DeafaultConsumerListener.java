@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.gaop.gCrawler.core.GrabConfig;
 import com.gaop.gCrawler.core.entity.GroupBuyingEntity;
+import com.gaop.gCrawler.core.factory.BufferResource;
 import com.gaop.gCrawler.core.factory.Consumer;
-import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
 import com.gaop.gCrawler.core.listener.ConsumerListener;
 
 /**
@@ -26,7 +26,7 @@ public class DeafaultConsumerListener implements ConsumerListener<GroupBuyingEnt
 	/**
 	 * 目标资源池
 	 */
-	private GroupBuyingResource<GroupBuyingEntity> groupBuyingResource;
+	private BufferResource<GroupBuyingEntity> bufferResource;
 	
 	public DeafaultConsumerListener()
 	{
@@ -46,9 +46,9 @@ public class DeafaultConsumerListener implements ConsumerListener<GroupBuyingEnt
 	static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(GrabConfig.DEFAULT_THREAD_NUMBER);  
 	
 	@Override
-	public void consumer(GroupBuyingResource<GroupBuyingEntity> bufferResource) {
-		this.groupBuyingResource = bufferResource;
-		scheduler.scheduleAtFixedRate(new Consumer<GroupBuyingEntity>(groupBuyingResource), 1, heartBeat, TimeUnit.MILLISECONDS);
+	public void consumer(BufferResource<GroupBuyingEntity> bufferResource) {
+		this.bufferResource = bufferResource;
+		scheduler.scheduleAtFixedRate(new Consumer<GroupBuyingEntity>(this.bufferResource), 1, heartBeat, TimeUnit.MILLISECONDS);
 	}
 
 }

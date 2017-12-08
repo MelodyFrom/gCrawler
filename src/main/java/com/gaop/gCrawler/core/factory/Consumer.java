@@ -1,7 +1,5 @@
 package com.gaop.gCrawler.core.factory;
 
-import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
-
 /**
  * @description 	
  * 	消费者对象
@@ -16,13 +14,13 @@ public class Consumer<T> implements Runnable{
 	 */
 	private BufferResource<T> resource;
 
-	public void setResource(GroupBuyingResource<T> resource) {
+	public void setResource(BufferResource<T> resource) {
 		this.resource = resource;
 	}
 	
 	public Consumer(){}
 	
-	public Consumer(GroupBuyingResource<T> resource) {
+	public Consumer(BufferResource<T> resource) {
 		this.resource = resource;
 	}
 

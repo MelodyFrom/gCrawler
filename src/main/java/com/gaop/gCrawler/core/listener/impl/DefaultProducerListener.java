@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.gaop.gCrawler.core.GrabConfig;
 import com.gaop.gCrawler.core.entity.GroupBuyingEntity;
+import com.gaop.gCrawler.core.factory.BufferResource;
 import com.gaop.gCrawler.core.factory.Producer;
-import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
 import com.gaop.gCrawler.core.listener.ProduceListener;
 
 /**
@@ -27,7 +27,7 @@ public class DefaultProducerListener implements ProduceListener<GroupBuyingEntit
 	/**
 	 * 目标资源池
 	 */
-	private GroupBuyingResource<GroupBuyingEntity> groupBuyingResource;
+	private BufferResource<GroupBuyingEntity> bufferResource;
 	
 	public DefaultProducerListener() {
 		this.heartBeat = DEFAULT_HEARTBEAT;
@@ -46,9 +46,9 @@ public class DefaultProducerListener implements ProduceListener<GroupBuyingEntit
 	static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(GrabConfig.DEFAULT_THREAD_NUMBER);  
 	
 	@Override
-	public void lisnten(GroupBuyingResource<GroupBuyingEntity> bufferResource) {
-		this.groupBuyingResource = bufferResource;
-		scheduler.scheduleAtFixedRate(new Producer<GroupBuyingEntity>(groupBuyingResource), 0, heartBeat, TimeUnit.MILLISECONDS);
+	public void lisnten(BufferResource<GroupBuyingEntity> bufferResource) {
+		this.bufferResource = bufferResource;
+		scheduler.scheduleAtFixedRate(new Producer<GroupBuyingEntity>(this.bufferResource), 0, heartBeat, TimeUnit.MILLISECONDS);
 	}
 	
 }

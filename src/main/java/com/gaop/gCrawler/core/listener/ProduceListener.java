@@ -1,6 +1,6 @@
 package com.gaop.gCrawler.core.listener;
 
-import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
+import com.gaop.gCrawler.core.factory.BufferResource;
 
 /**
  * @description 	
@@ -25,5 +25,5 @@ public interface ProduceListener<T> {
 	 */
 	public final static int DEFAULT_BATCH_NUMBER = 40;
 	
-	void lisnten(GroupBuyingResource<T> bufferResource);
+	void lisnten(BufferResource<T> bufferResource);
 }

@@ -1,7 +1,5 @@
 package com.gaop.gCrawler.core.factory;
 
-import com.gaop.gCrawler.core.factory.impl.GroupBuyingResource;
-
 /**
  * @description 	
  * 	生产者对象
@@ -22,7 +20,7 @@ public class Producer<T> implements Runnable{
 		this.resource = resource;
 	}
 
-	public void setResource(GroupBuyingResource<T> resource) {
+	public void setResource(BufferResource<T> resource) {
 		this.resource = resource;
 	}
 
