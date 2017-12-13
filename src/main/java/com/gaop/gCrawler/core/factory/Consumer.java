@@ -1,5 +1,7 @@
 package com.gaop.gCrawler.core.factory;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
 /**
  * @description 	
  * 	消费者对象
@@ -7,7 +9,7 @@ package com.gaop.gCrawler.core.factory;
  * @date 2017年10月25日 上午12:03:23
  * @param <T>
  */
-public class Consumer<T> implements Runnable{
+public class Consumer<T> implements Runnable {
 	
 	/**
 	 * 消费目标资源池

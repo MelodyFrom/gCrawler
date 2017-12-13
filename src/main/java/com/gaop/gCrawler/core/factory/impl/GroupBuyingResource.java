@@ -160,8 +160,10 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 						++produceCount;
 					}
 					logger.info("生产者监听=>当前资源池容量{}, 生产总量{}", list.size(), produceCount);
-					list.notifyAll();
+				} else {
+					logger.info("地域生产者启动下限,不执行生产...当前资源数量:{}", list.size());
 				}
+				list.notifyAll();
 			} catch (IOException ex) {
 				logger.error("爬取页面信息异常", ex);
 			}
@@ -190,14 +192,17 @@ public class GroupBuyingResource<T> implements BufferResource<T>{
 			//判断资源池消费下限
 			if(list.size() >= consumerLine)
 			{
+				int batchConsumerCount = 0;
 				GroupBuyingEntity groupBuyingEntity = null;
 				for(int batch = 0; batch < this.consumerBatch; batch++)
 				{
 					//TODO 对封装完成的数据对象的操作
 					groupBuyingEntity = groupBuyingParser.parse(list.poll());
-					System.out.println(groupBuyingEntity);
+//					System.out.println(groupBuyingEntity);
+					batchConsumerCount++;
 					consumerCount++;
 				}
+				logger.info("此次消费资源数量{}", batchConsumerCount);
 			}
 			logger.info("消费对象：,消费数量统计{},当前资源池容量{}", consumerCount, list.size());
 		}
